@@ -10,4 +10,13 @@ def login():
         return False
 
 
-login()
+def main():
+    """Main function"""
+    while True:
+        is_logged_in = login()
+        if is_logged_in == True:
+            print("But... we're in")
+            break
+
+
+main()
