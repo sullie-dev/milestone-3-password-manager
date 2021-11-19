@@ -2,7 +2,7 @@ import os
 import psycopg2
 import random
 import string
-# import hashlib
+import base64
 
 
 def login():
@@ -32,7 +32,7 @@ def encrypt_user_password(password):
     salt_2 = os.getenv("SALT_2")
 
     pre_encrypted_password = password + salt_1 + salt_2
-    encrypted_password = pre_encrypted_password.encode()
+    encrypted_password = base64.b64encode(bytes(pre_encrypted_password, 'utf-8'))
 
     return encrypted_password
 
@@ -42,8 +42,8 @@ def create_password(connection, password=None):
     username = input("Please enter the username ")
     if password is None:
         password = input("Please enter your password ")
-    url = input('Please enter the url of the website')
-    password_name = input("What would you like to name this password?")
+    url = input('Please enter the url of the website ')
+    password_name = input("What would you like to name this password? ")
     encrypt_password = encrypt_user_password(password)
     connection = connection
     cursor = connection.cursor()
