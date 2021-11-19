@@ -1,5 +1,7 @@
 import os
 import psycopg2
+import random
+import string
 
 
 def login():
@@ -15,6 +17,7 @@ def login():
 
 
 def connect_db():
+    """Connects to the database"""
     try:
         database_url = os.getenv("DATABASE_URL")
         db_connection = psycopg2.connect(database_url, sslmode="require")
@@ -23,7 +26,21 @@ def connect_db():
         print(e)
 
 
+def generate_password(length):
+    """Generates a random password for the user"""
+    upper_string = string.ascii_uppercase
+    lower_string = string.ascii_lowercase
+    numerical = string.digits
+    symbol = string.punctuation
+
+    alphabet = upper_string + lower_string + numerical + symbol
+    random_character = random.sample(alphabet, length)
+    random_password = "".join(random_character)
+    return random_password
+
+
 def menu():
+    """Allows the user to be able to picj which option they want to select"""
     print("What would you like to do?")
     menu_option = int(input("1. Add new password\n2. Generate a new password\n"))
 
@@ -31,7 +48,8 @@ def menu():
         if menu_option == 1:
             print("menu option 1")
         elif menu_option == 2:
-            print("menu option 2")
+            length = int(input("How long do you want the password to be? "))
+            print(generate_password(length))
         else:
             print("Invalid choice")
     except ValueError as e:
