@@ -27,6 +27,7 @@ def connect_db():
         print(e)
 
 
+<<<<<<< HEAD
 def encrypt_user_password(password):
     salt_1 = os.getenv('SALT_1')
     salt_2 = os.getenv("SALT_2")
@@ -37,6 +38,8 @@ def encrypt_user_password(password):
     return encrypted_password
 
 
+=======
+>>>>>>> 33a9e1131d9156c8456a15c02c9b800f6716ab74
 def create_password(connection, password=None):
     """Allow user to create a new database entry"""
     username = input("Please enter the username ")
@@ -44,12 +47,20 @@ def create_password(connection, password=None):
         password = input("Please enter your password ")
     url = input('Please enter the url of the website')
     password_name = input("What would you like to name this password?")
+<<<<<<< HEAD
     encrypt_password = encrypt_user_password(password)
+=======
+
+>>>>>>> 33a9e1131d9156c8456a15c02c9b800f6716ab74
     connection = connection
     cursor = connection.cursor()
 
     insert_query = """ INSERT INTO passwords (username, password, url, password_name) VALUES (%s,%s,%s,%s)"""
+<<<<<<< HEAD
     record_to_insert = (username, encrypt_password, url, password_name)
+=======
+    record_to_insert = (username, password, url, password_name)
+>>>>>>> 33a9e1131d9156c8456a15c02c9b800f6716ab74
     cursor.execute(insert_query, record_to_insert)
 
     print("Adding your password.")
