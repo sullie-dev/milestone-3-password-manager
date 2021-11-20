@@ -31,10 +31,19 @@ def encrypt_user_password(password):
     salt_1 = os.getenv('SALT_1')
     salt_2 = os.getenv("SALT_2")
 
-    pre_encrypted_password = password + salt_1 + salt_2
+    pre_encrypted_password = password
     encrypted_password = base64.b64encode(bytes(pre_encrypted_password, 'utf-8'))
-
     return encrypted_password
+
+
+def decrypt_password(password):
+    salt_1 = os.getenv('SALT_1')
+    salt_2 = os.getenv("SALT_2")
+    hash_key = len(salt_1+salt_2)
+    encrypted_password = password
+    password = base64.b64decode(str(encrypted_password, "utf-8", 'true'))
+
+    return str(password[:hash_key])
 
 
 def create_password(connection, password=None):
@@ -45,6 +54,7 @@ def create_password(connection, password=None):
     url = input('Please enter the url of the website ')
     password_name = input("What would you like to name this password? ")
     encrypt_password = encrypt_user_password(password)
+
     connection = connection
     cursor = connection.cursor()
 
@@ -100,8 +110,6 @@ def menu():
 
 def main():
     """Main function"""
-
-    print(connect_db())
 
     while True:
         is_logged_in = login()
