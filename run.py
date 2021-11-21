@@ -2,7 +2,7 @@ import os
 import psycopg2
 import random
 import string
-import base64
+from cryptography.fernet import Fernet
 
 
 def login():
@@ -28,22 +28,23 @@ def connect_db():
 
 
 def encrypt_user_password(password):
-    salt_1 = os.getenv('SALT_1')
-    salt_2 = os.getenv("SALT_2")
+    key = os.getenv("KEY")
+    encrypted_password = password.encode()
+    encryption = Fernet(bytes(key, "utf-8"))
 
-    pre_encrypted_password = password + salt_1 + salt_2
-    encrypted_password = base64.b64encode(bytes(pre_encrypted_password, 'utf-8'))
+    encrypted_password = encryption.encrypt(encrypted_password).decode()
+
     return encrypted_password
 
 
 def decrypt_password(password):
-    salt_1 = os.getenv('SALT_1')
-    salt_2 = os.getenv("SALT_2")
-    hash_key = len(salt_1+salt_2)
-    encrypted_password = password
-    password = base64.b64decode(encrypted_password, altchars="'b", validate=True)
+    key = os.getenv("KEY")
+    # encrypted_password = password.decode()
+    encryption = Fernet(bytes(key, "utf-8"))
 
-    return str(password[:hash_key])
+    decrypted_password = encryption.decrypt(bytes(password, "utf-8")).decode()
+
+    return decrypted_password
 
 
 def create_password(connection, password=None):
@@ -122,7 +123,9 @@ def find_password():
     except ValueError as e:
         print(e)
 
-    print(search)
+    for item in search:
+        passworc = decrypt_password(item[1])
+        print(passworc)
 
 
 def menu():
