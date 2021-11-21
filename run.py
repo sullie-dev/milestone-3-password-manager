@@ -3,6 +3,7 @@ import psycopg2
 import random
 import string
 from cryptography.fernet import Fernet
+from tabulate import tabulate
 
 
 def login():
@@ -28,6 +29,7 @@ def connect_db():
 
 
 def encrypt_user_password(password):
+    """Encrypt users password"""
     key = os.getenv("KEY")
     encrypted_password = password.encode()
     encryption = Fernet(bytes(key, "utf-8"))
@@ -38,8 +40,8 @@ def encrypt_user_password(password):
 
 
 def decrypt_password(password):
+    """Decrypt password"""
     key = os.getenv("KEY")
-    # encrypted_password = password.decode()
     encryption = Fernet(bytes(key, "utf-8"))
 
     decrypted_password = encryption.decrypt(bytes(password, "utf-8")).decode()
@@ -92,6 +94,20 @@ def generate_password(length):
     return random_password
 
 
+def generate_table(values):
+    """Add passwords to a table"""
+    headers = ["Username", "Password", "URL", "Password name"]
+    table_values = []
+    for value in values:
+        username, password, url, pw_name = value
+        password = decrypt_password(value[1])
+        temp_tup = (username, password, url, pw_name)
+        table_values.append(temp_tup)
+
+    print("\n"+tabulate(table_values, headers=headers)+"\n")
+
+
+
 def search_database(column, search_term):
     """Search database for passwords"""
     connection = connect_db()
@@ -103,9 +119,9 @@ def search_database(column, search_term):
     result = cursor.fetchall()
 
     if not result:
-        result = f"No passwords found for {search_term}"
-
-    return result
+        return False
+    else:
+        return result
 
 
 def find_password():
@@ -123,9 +139,10 @@ def find_password():
     except ValueError as e:
         print(e)
 
-    for item in search:
-        passworc = decrypt_password(item[1])
-        print(passworc)
+    if not search:
+        print( f"No passwords found for {search_term}")
+    else:
+        return generate_table(search)
 
 
 def menu():
@@ -153,7 +170,6 @@ def main():
     while True:
         is_logged_in = login()
         while is_logged_in:
-            print("But... we're in")
             menu()
 
 
