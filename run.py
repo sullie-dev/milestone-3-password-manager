@@ -41,7 +41,7 @@ def decrypt_password(password):
     salt_2 = os.getenv("SALT_2")
     hash_key = len(salt_1+salt_2)
     encrypted_password = password
-    password = base64.b64decode(str(encrypted_password, "utf-8", 'true'))
+    password = base64.b64decode(encrypted_password, altchars="'b", validate=True)
 
     return str(password[:hash_key])
 
@@ -91,39 +91,44 @@ def generate_password(length):
     return random_password
 
 
-def find_password():
-    """Allow user to search by the email/username or password name"""
-
+def search_database(column, search_term):
+    """Search database for passwords"""
     connection = connect_db()
     cursor = connection.cursor()
 
-    column_search = input("Would you like to search for a password using username/email or by the website name? ")
+    search_query = f"SELECT * from passwords WHERE {column}='{search_term}'"
+    cursor.execute(search_query)
+    connection.commit()
+    result = cursor.fetchall()
+
+    if not result:
+        result = f"No passwords found for {search_term}"
+
+    return result
+
+
+def find_password():
+    """Allow user to search by the email/username or password name"""
+
+    column_search = int(input("Would you like to\n1. Search by username/email\n2. By the password name?\n"))
+    search_term = input("What would you like to search for ")
 
     try:
-        if column_search == "email" or column_search == "username":
-            search_term = input("What would you like to search for ")
-            search_query = f"SELECT * from passwords WHERE username='{search_term}'"
-            cursor.execute(search_query)
-            connection.commit()
-            result = cursor.fetchall()
-            print(result)
-
-        elif column_search == "website name" or column_search == "name" or column_search == "website":
-            search_term = input("What would you like to search for ")
-            search_query = f"SELECT * from passwords WHERE password_name='{search_term}'"
-            cursor.execute(search_query)
-            connection.commit()
-            result = cursor.fetchall()
-            print(result)
+        if column_search == 1:
+            search = search_database("username", search_term)
+        elif column_search == 2:
+            search = search_database("password_name", search_term)
 
     except ValueError as e:
         print(e)
-        
+
+    print(search)
+
 
 def menu():
     """Allows the user to be able to pick which option they want to select"""
     print("What would you like to do?")
-    menu_option = int(input("1. Add new password\n2. Generate a new password\n3. Search for password"))
+    menu_option = int(input("1. Add new password\n2. Generate a new password\n3. Search for password\n"))
 
     try:
         if menu_option == 1:
