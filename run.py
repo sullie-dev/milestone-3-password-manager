@@ -235,11 +235,29 @@ def delete_password():
     connection.commit()
     print(f"Successfully deleted the password {password_name}\n")
 
+
+def show_all():
+    """Search database for all passwords"""
+    connection = connect_db()
+    cursor = connection.cursor()
+
+    search_query = f"SELECT * FROM passwords"
+    cursor.execute(search_query)
+    connection.commit()
+    result = cursor.fetchall()
+    generate_table(result)
+
+    if not result:
+        return False
+    else:
+        return result
+
+
 def menu():
     """Allows the user to be able to pick which option they want to select"""
     print("What would you like to do?")
-    menu_option = int(input("1. Add new password\n2. Generate a new password\n3. Search for password\n"
-                            "4. Delete password\n"))
+    menu_option = int(input("1. Add a new password\n2. Generate a new password\n3. Search for a password\n"
+                            "4. Search for all passwords\n5. Delete a password"))
 
     try:
         if menu_option == 1:
@@ -250,6 +268,8 @@ def menu():
         elif menu_option == 3:
             find_password()
         elif menu_option == 4:
+            show_all()
+        elif menu_option == 5:
             delete_password()
         else:
             print("Invalid choice")
