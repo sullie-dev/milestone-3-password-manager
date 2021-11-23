@@ -215,10 +215,31 @@ def find_password():
         return generate_table(search)
 
 
+def delete_password():
+    connection = connect_db()
+    cursor = connection.cursor()
+
+    while True:
+        try:
+            password_name = input("Enter the name of the password you want to remove:  ")
+            does_entry_exists = search_database("password_name", password_name)
+            if not does_entry_exists:
+                raise LookupError
+        except LookupError as error:
+            print(f"There is no password with the name {password_name} saved")
+            continue
+        break
+
+    delete_query = f""" DELETE from passwords WHERE password_name='{password_name}'"""
+    cursor.execute(delete_query)
+    connection.commit()
+    print(f"Successfully deleted the password {password_name}\n")
+
 def menu():
     """Allows the user to be able to pick which option they want to select"""
     print("What would you like to do?")
-    menu_option = int(input("1. Add new password\n2. Generate a new password\n3. Search for password\n"))
+    menu_option = int(input("1. Add new password\n2. Generate a new password\n3. Search for password\n"
+                            "4. Delete password\n"))
 
     try:
         if menu_option == 1:
@@ -228,6 +249,8 @@ def menu():
             print(generate_password(length))
         elif menu_option == 3:
             find_password()
+        elif menu_option == 4:
+            delete_password()
         else:
             print("Invalid choice")
     except ValueError as e:
