@@ -49,28 +49,99 @@ def decrypt_password(password):
     return decrypted_password
 
 
+class PasswordCreation:
+
+    @staticmethod
+    def capture_username():
+        capturing = True
+        while capturing:
+            try:
+                username = input("Please enter the username ")
+
+                if username == "":
+                    raise ValueError
+            except ValueError as err:
+                print("Username field can't be empty, please try again.")
+                continue
+            capturing = False
+            return username
+
+    @staticmethod
+    def capture_password(password):
+        capturing = True
+        while capturing:
+            if password is None:
+                try:
+                    password = input("Please enter your password ")
+                    if password == "":
+                        raise ValueError
+                except ValueError as err:
+                    print('Password field cannot be left blank, please enter a password')
+                    continue
+            capturing = False
+        return password
+
+    @staticmethod
+    def capture_url():
+        capturing = True
+        while capturing:
+            try:
+                url = input('Please enter the url of the website ')
+                if url == "":
+                    raise ValueError
+            except ValueError as error:
+                print("URL can't be empty, please enter the address of the site")
+                continue
+            capturing = False
+        return url
+
+    @staticmethod
+    def capture_password_name():
+        capturing = True
+        while capturing:
+            try:
+                password_name = input("What would you like to name this password? ")
+                is_unique = search_database("password_name", password_name)
+                if is_unique:
+                    raise LookupError
+                elif password_name == "":
+                    raise ValueError
+
+            except LookupError as error:
+                print('Your password should have a unique name')
+                continue
+            except ValueError as error:
+                print("The password name can't be left blank")
+            capturing = False
+        return password_name
+
+    @staticmethod
+    def write_password_to_db(connection, username, encrypt_password, url, password_name):
+        connection = connection
+        cursor = connection.cursor()
+
+        insert_query = """ INSERT INTO passwords (username, password, url, password_name) VALUES (%s,%s,%s,%s)"""
+        record_to_insert = (username, encrypt_password, url, password_name)
+        cursor.execute(insert_query, record_to_insert)
+
+        print("Adding your password.")
+        print("Adding your password..")
+        print("Adding your password...")
+
+        connection.commit()
+        print("Password added to the database\n")
+
+
 def create_password(connection, password=None):
     """Allow user to create a new database entry"""
-    username = input("Please enter the username ")
-    if password is None:
-        password = input("Please enter your password ")
-    url = input('Please enter the url of the website ')
-    password_name = input("What would you like to name this password? ")
+
+    manager = PasswordCreation
+    username = manager.capture_username()
+    password = manager.capture_password(password)
+    url = manager.capture_url()
+    password_name = manager.capture_password_name()
     encrypt_password = encrypt_user_password(password)
-
-    connection = connection
-    cursor = connection.cursor()
-
-    insert_query = """ INSERT INTO passwords (username, password, url, password_name) VALUES (%s,%s,%s,%s)"""
-    record_to_insert = (username, encrypt_password, url, password_name)
-    cursor.execute(insert_query, record_to_insert)
-
-    print("Adding your password.")
-    print("Adding your password..")
-    print("Adding your password...")
-
-    connection.commit()
-    print("Password added to the database")
+    manager.write_password_to_db(connection, username, encrypt_password, url, password_name)
 
 
 def generate_password(length):
@@ -84,9 +155,9 @@ def generate_password(length):
     random_character = random.sample(alphabet, length)
     random_password = "".join(random_character)
 
-    add_new_password = input("Do you want to enter this as a new password? ")
+    add_new_password = input("Do you want to save this as a new password, (y)es or (n)o ")
 
-    if add_new_password == "yes":
+    if add_new_password == "y":
         create_password(connect_db(), random_password)
     else:
         return random_password
@@ -105,7 +176,6 @@ def generate_table(values):
         table_values.append(temp_tup)
 
     print("\n"+tabulate(table_values, headers=headers)+"\n")
-
 
 
 def search_database(column, search_term):
@@ -140,7 +210,7 @@ def find_password():
         print(e)
 
     if not search:
-        print( f"No passwords found for {search_term}")
+        print(f"No passwords found for {search_term}")
     else:
         return generate_table(search)
 
