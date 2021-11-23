@@ -5,7 +5,6 @@ import string
 from cryptography.fernet import Fernet
 from tabulate import tabulate
 
-
 def login():
     """Check to make sure the master password is correct"""
     password = input("Enter the master password: ")
@@ -155,14 +154,13 @@ def generate_password(length):
     random_character = random.sample(alphabet, length)
     random_password = "".join(random_character)
 
+    print(random_password)
     add_new_password = input("Do you want to save this as a new password, (y)es or (n)o ")
 
     if add_new_password == "y":
         create_password(connect_db(), random_password)
     else:
-        return random_password
-
-    return random_password
+        menu()
 
 
 def generate_table(values):
@@ -255,9 +253,10 @@ def show_all():
 
 def menu():
     """Allows the user to be able to pick which option they want to select"""
-    print("What would you like to do?")
+    print("What option would you like to choose? (choose the menu number)\n")
     menu_option = int(input("1. Add a new password\n2. Generate a new password\n3. Search for a password\n"
-                            "4. Search for all passwords\n5. Delete a password"))
+                            "4. Search for all passwords\n5. Delete a password\n"
+                            "6. Exit password manager\n\nYour choice: "))
 
     try:
         if menu_option == 1:
@@ -271,6 +270,8 @@ def menu():
             show_all()
         elif menu_option == 5:
             delete_password()
+        elif menu_option == 6:
+            exit()
         else:
             print("Invalid choice")
     except ValueError as e:
@@ -280,10 +281,9 @@ def menu():
 def main():
     """Main function"""
 
-    while True:
-        is_logged_in = login()
-        while is_logged_in:
-            menu()
+    is_logged_in = login()
+    if is_logged_in:
+        menu()
 
 
 main()
