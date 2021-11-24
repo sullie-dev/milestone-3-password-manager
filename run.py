@@ -263,7 +263,7 @@ def menu():
             create_password(connect_db())
         elif menu_option == 2:
             length = int(input("How long do you want the password to be? "))
-            print(generate_password(length))
+            generate_password(length)
         elif menu_option == 3:
             find_password()
         elif menu_option == 4:
