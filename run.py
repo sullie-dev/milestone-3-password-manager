@@ -60,10 +60,9 @@ class PasswordCreation:
 
                 if username == "":
                     raise ValueError
-            except ValueError as err:
+            except ValueError:
                 print("Username field can't be empty, please try again.")
                 continue
-            capturing = False
             return username
 
     @staticmethod
@@ -76,7 +75,7 @@ class PasswordCreation:
                                      "should be between 8 and 25 characters long ")
                     if password == "":
                         raise ValueError
-                except ValueError as err:
+                except ValueError:
                     print('Password field cannot be left blank, please enter a password')
                     continue
                 while len(password) > 0:
@@ -100,7 +99,7 @@ class PasswordCreation:
                 url = input('Please enter the url of the website ')
                 if url == "":
                     raise ValueError
-            except ValueError as error:
+            except ValueError:
                 print("URL can't be empty, please enter the address of the site")
                 continue
             capturing = False
@@ -118,10 +117,10 @@ class PasswordCreation:
                 elif password_name == "":
                     raise ValueError
 
-            except LookupError as error:
+            except LookupError:
                 print('Your password should have a unique name')
                 continue
-            except ValueError as error:
+            except ValueError:
                 print("The password name can't be left blank")
             capturing = False
         return password_name
@@ -225,14 +224,10 @@ def find_password():
     column_search = int(input("Would you like to\n1. Search by username/email\n2. By the password name?\n"))
     search_term = input("What would you like to search for ")
 
-    try:
-        if column_search == 1:
-            search = search_database("username", search_term)
-        elif column_search == 2:
-            search = search_database("password_name", search_term)
-
-    except ValueError as e:
-        print(e)
+    if column_search == 1:
+        search = search_database("username", search_term)
+    elif column_search == 2:
+        search = search_database("password_name", search_term)
 
     if not search:
         print(f"No passwords found for {search_term}")
@@ -250,7 +245,7 @@ def delete_password():
             does_entry_exists = search_database("password_name", password_name)
             if not does_entry_exists:
                 raise LookupError
-        except LookupError as error:
+        except LookupError:
             print(f"There is no password with the name {password_name} saved")
             continue
         break
@@ -292,7 +287,7 @@ def menu():
             while True:
                 password_length = int(input("How long do you want the password to be? "
                                             "Password's should be more than 8 characters and "
-                                            "a max of 25 characters long. "))
+                                            "a max of 25 characters long.\n"))
                 length_check = check_password(password_length)
                 if length_check is True:
                     break
