@@ -169,7 +169,10 @@ def create_password(connection, password=None):
 
 
 def generate_password(length):
-    """Generates a random password for the user"""
+    """
+    Generates a random password for the user
+    Credit: Medium article on password generation in README.md
+    """
     upper_string = string.ascii_uppercase
     lower_string = string.ascii_lowercase
     numerical = string.digits
@@ -190,7 +193,11 @@ def generate_password(length):
 
 
 def generate_table(values):
-    """Add passwords to a table"""
+    """
+    Add passwords to a table
+    Credit: Create tables in Python in README.md
+
+    """
     headers = ["Username", "Password", "URL", "Password name"]
     table_values = []
     for value in values:
