@@ -5,6 +5,7 @@ import string
 from cryptography.fernet import Fernet
 from tabulate import tabulate
 
+
 def login():
     """Check to make sure the master password is correct"""
     password = input("Enter the master password: ")
@@ -71,7 +72,7 @@ class PasswordCreation:
         while capturing:
             if password is None:
                 try:
-                    password = input("Please enter your password ")
+                    password = input("Please enter your password, passwords should be between 8 and 25 characters long ")
                     if password == "":
                         raise ValueError
                 except ValueError as err:
@@ -155,7 +156,8 @@ def generate_password(length):
     random_password = "".join(random_character)
 
     print(random_password)
-    add_new_password = input("Do you want to save this as a new password, (y)es or (n)o ")
+    add_new_password = input("Do you want to save this as a new password, "
+                             "(y)es or (n)o? ")
 
     if add_new_password == "y":
         create_password(connect_db(), random_password)
@@ -262,8 +264,21 @@ def menu():
         if menu_option == 1:
             create_password(connect_db())
         elif menu_option == 2:
-            length = int(input("How long do you want the password to be? "))
-            generate_password(length)
+            password_length = int(input("How long do you want the password to be? "
+                                        "Password's should be more than 8 characters and "
+                                        "a max of 2 characters long. "))
+            while password_length > 0:
+                if password_length < 8:
+                    print("Password is to short...\n")
+                elif password_length > 25:
+                    print("Password is to long...\n")
+                else:
+                    break
+                password_length = int(input("How long do you want the password to be? "
+                                            "Password's should be more than 8 characters and "
+                                            "a max of 25 characters long. "))
+
+            generate_password(password_length)
         elif menu_option == 3:
             find_password()
         elif menu_option == 4:
@@ -282,7 +297,7 @@ def main():
     """Main function"""
 
     is_logged_in = login()
-    if is_logged_in:
+    while is_logged_in:
         menu()
 
 
