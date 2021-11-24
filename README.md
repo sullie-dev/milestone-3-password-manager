@@ -1,6 +1,8 @@
 #Password Manager
 
-[View project here](https://milestone-3-password-manager.herokuapp.com/) password is  `pw123`
+
+[View project here](https://milestone-3-password-manager.herokuapp.com/) password is  `pw123`.  
+This is a demo project please **do not store any real passwords** as passwords are returned as plain text to the users when viewing passwords
 
 ---
 
