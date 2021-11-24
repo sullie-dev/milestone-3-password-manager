@@ -61,7 +61,7 @@ class PasswordCreation:
                 if username == "":
                     raise ValueError
             except ValueError:
-                print("Username field can't be empty, please try again.")
+                print("Username field can't be empty, please enter a username.")
                 continue
             return username
 
@@ -71,12 +71,12 @@ class PasswordCreation:
         while capturing:
             if password is None:
                 try:
-                    password = input("Please enter your password, passwords "
-                                     "should be between 8 and 25 characters long ")
+                    password = input("Please enter your password,\n"
+                                     "Passwords should be between 8 and 25 characters long ")
                     if password == "":
                         raise ValueError
                 except ValueError:
-                    print('Password field cannot be left blank, please enter a password')
+                    print('Password field cannot be empty, please enter a password')
                     continue
                 while len(password) > 0:
                     length_check = check_password(len(password))
@@ -85,8 +85,8 @@ class PasswordCreation:
                     else:
                         print(length_check)
                         password = input(
-                            "Please enter your password, passwords "
-                            "should be between 8 and 25 characters long ")
+                            "Please enter your password\n"
+                            "Passwords should be between 8 and 25 characters long ")
 
             capturing = False
         return password
@@ -221,7 +221,9 @@ def search_database(column, search_term):
 def find_password():
     """Allow user to search by the email/username or password name"""
 
-    column_search = int(input("Would you like to\n1. Search by username/email\n2. By the password name?\n"))
+    column_search = int(input("Would you like to\n"
+                              "1. Search by username\n"
+                              "2. By the password name?\n"))
     search_term = input("What would you like to search for ")
 
     if column_search == 1:
@@ -276,16 +278,20 @@ def show_all():
 def menu():
     """Allows the user to be able to pick which option they want to select"""
     print("What option would you like to choose? (choose the menu number)\n")
-    menu_option = int(input("1. Add a new password\n2. Generate a new password\n3. Search for a password\n"
-                            "4. Search for all passwords\n5. Delete a password\n"
-                            "6. Exit password manager\n\nYour choice: "))
+    menu_option = int(input("1. Add a new password\n"
+                            "2. Generate a new password\n"
+                            "3. Search for a password\n"
+                            "4. Search for all passwords\n"
+                            "5. Delete a password\n"
+                            "6. Exit password manager\n\n"
+                            "Your choice: "))
 
     try:
         if menu_option == 1:
             create_password(connect_db())
         elif menu_option == 2:
             while True:
-                password_length = int(input("How long do you want the password to be? "
+                password_length = int(input("How long do you want the password to be?\n"
                                             "Password's should be more than 8 characters and "
                                             "a max of 25 characters long.\n"))
                 length_check = check_password(password_length)
