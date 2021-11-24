@@ -72,12 +72,23 @@ class PasswordCreation:
         while capturing:
             if password is None:
                 try:
-                    password = input("Please enter your password, passwords should be between 8 and 25 characters long ")
+                    password = input("Please enter your password, passwords "
+                                     "should be between 8 and 25 characters long ")
                     if password == "":
                         raise ValueError
                 except ValueError as err:
                     print('Password field cannot be left blank, please enter a password')
                     continue
+                while len(password) > 0:
+                    length_check = check_password(len(password))
+                    if length_check is True:
+                        break
+                    else:
+                        print(length_check)
+                        password = input(
+                            "Please enter your password, passwords "
+                            "should be between 8 and 25 characters long ")
+
             capturing = False
         return password
 
@@ -130,6 +141,20 @@ class PasswordCreation:
 
         connection.commit()
         print("Password added to the database\n")
+
+
+def check_password(password):
+    """
+    Accepts the length of a password string to check if it is within 8-25 characters.
+    Returns if the password is too long or too short. If the passwords is the right
+    length it returns True, if statement is used to break the parent loop
+    """
+    if password < 8:
+        return "Password is to short...\n"
+    elif password > 25:
+        return "Password is to long...\n"
+    else:
+        return True
 
 
 def create_password(connection, password=None):
@@ -264,19 +289,15 @@ def menu():
         if menu_option == 1:
             create_password(connect_db())
         elif menu_option == 2:
-            password_length = int(input("How long do you want the password to be? "
-                                        "Password's should be more than 8 characters and "
-                                        "a max of 2 characters long. "))
-            while password_length > 0:
-                if password_length < 8:
-                    print("Password is to short...\n")
-                elif password_length > 25:
-                    print("Password is to long...\n")
-                else:
-                    break
+            while True:
                 password_length = int(input("How long do you want the password to be? "
                                             "Password's should be more than 8 characters and "
                                             "a max of 25 characters long. "))
+                length_check = check_password(password_length)
+                if length_check is True:
+                    break
+                else:
+                    print(length_check)
 
             generate_password(password_length)
         elif menu_option == 3:
