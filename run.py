@@ -206,7 +206,7 @@ def generate_table(values):
         temp_tup = (username, password, url, pw_name)
         table_values.append(temp_tup)
 
-    print("\n"+tabulate(table_values, headers=headers)+"\n")
+    print("\n" + tabulate(table_values, headers=headers) + "\n")
 
 
 def search_database(column, search_term):
@@ -285,18 +285,18 @@ def show_all():
 def menu():
     """Allows the user to be able to pick which option they want to select"""
     print("What option would you like to choose? (choose the menu number)\n")
-    menu_option = int(input("1. Add a new password\n"
-                            "2. Generate a new password\n"
-                            "3. Search for a password\n"
-                            "4. Search for all passwords\n"
-                            "5. Delete a password\n"
-                            "6. Exit password manager\n\n"
-                            "Your choice: "))
+    while True:
 
-    try:
-        if menu_option == 1:
+        menu_option = input("1. Add a new password\n"
+                                "2. Generate a new password\n"
+                                "3. Search for a password\n"
+                                "4. Search for all passwords\n"
+                                "5. Delete a password\n"
+                                "6. Exit password manager\n\n"
+                                "Your choice: ")
+        if menu_option == '1':
             create_password(connect_db())
-        elif menu_option == 2:
+        elif menu_option == '2':
             while True:
                 password_length = int(input("How long do you want the password to be?\n"
                                             "Password's should be more than 8 characters and "
@@ -308,18 +308,16 @@ def menu():
                     print(length_check)
 
             generate_password(password_length)
-        elif menu_option == 3:
+        elif menu_option == '3':
             find_password()
-        elif menu_option == 4:
+        elif menu_option == '4':
             show_all()
-        elif menu_option == 5:
+        elif menu_option == '5':
             delete_password()
-        elif menu_option == 6:
+        elif menu_option == '6':
             exit()
         else:
-            print("Invalid choice")
-    except ValueError as e:
-        print(e)
+            print('\nInvalid option\n')
 
 
 def main():
