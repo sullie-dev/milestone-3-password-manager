@@ -61,7 +61,8 @@ class PasswordCreation:
                 if username == "":
                     raise ValueError
             except ValueError:
-                print("Username field can't be empty, please enter a username.")
+                print("Username field can't be empty,"
+                      "please enter a username.")
                 continue
             return username
 
@@ -72,11 +73,13 @@ class PasswordCreation:
             if password is None:
                 try:
                     password = input("Please enter your password,\n"
-                                     "Passwords should be between 8 and 25 characters long ")
+                                     "Passwords should be between 8"
+                                     "and 25 characters long ")
                     if password == "":
                         raise ValueError
                 except ValueError:
-                    print('Password field cannot be empty, please enter a password')
+                    print('Password field cannot be empty,'
+                          'please enter a password')
                     continue
                 while len(password) > 0:
                     length_check = check_password(len(password))
@@ -86,7 +89,8 @@ class PasswordCreation:
                         print(length_check)
                         password = input(
                             "Please enter your password\n"
-                            "Passwords should be between 8 and 25 characters long ")
+                            "Passwords should be between 8"
+                            "and 25 characters long ")
 
             capturing = False
         return password
@@ -100,7 +104,8 @@ class PasswordCreation:
                 if url == "":
                     raise ValueError
             except ValueError:
-                print("URL can't be empty, please enter the address of the site")
+                print("URL can't be empty, please enter"
+                      "the address of the site")
                 continue
             capturing = False
         return url
@@ -110,7 +115,8 @@ class PasswordCreation:
         capturing = True
         while capturing:
             try:
-                password_name = input("What would you like to name this password? ")
+                password_name = input("What would you like"
+                                      "to name this password? ")
                 is_unique = search_database("password_name", password_name)
                 if is_unique:
                     raise LookupError
@@ -126,11 +132,13 @@ class PasswordCreation:
         return password_name
 
     @staticmethod
-    def write_password_to_db(connection, username, encrypt_password, url, password_name):
+    def write_password_to_db(connection, username,
+                             encrypt_password, url, password_name):
         connection = connection
         cursor = connection.cursor()
 
-        insert_query = """ INSERT INTO passwords (username, password, url, password_name) VALUES (%s,%s,%s,%s)"""
+        insert_query = """ INSERT INTO passwords (username, password,url,
+                        password_name) VALUES (%s,%s,%s,%s)"""
         record_to_insert = (username, encrypt_password, url, password_name)
         cursor.execute(insert_query, record_to_insert)
 
@@ -144,8 +152,10 @@ class PasswordCreation:
 
 def check_password(password):
     """
-    Accepts the length of a password string to check if it is within 8-25 characters.
-    Returns if the password is too long or too short. If the passwords is the right
+    Accepts the length of a password string to
+    check if it is within 8-25 characters.
+    Returns if the password is too long or too short.
+    If the passwords is the right
     length it returns True, if statement is used to break the parent loop
     """
     if password < 8:
@@ -165,7 +175,8 @@ def create_password(connection, password=None):
     url = manager.capture_url()
     password_name = manager.capture_password_name()
     encrypt_password = encrypt_user_password(password)
-    manager.write_password_to_db(connection, username, encrypt_password, url, password_name)
+    manager.write_password_to_db(connection, username,
+                                 encrypt_password, url, password_name)
 
 
 def generate_password(length):
@@ -206,7 +217,7 @@ def generate_table(values):
         temp_tup = (username, password, url, pw_name)
         table_values.append(temp_tup)
 
-    print("\n"+tabulate(table_values, headers=headers)+"\n")
+    print("\n" + tabulate(table_values, headers=headers) + "\n")
 
 
 def search_database(column, search_term):
@@ -250,7 +261,8 @@ def delete_password():
 
     while True:
         try:
-            password_name = input("Enter the name of the password you want to remove:  ")
+            password_name = input("Enter the name of the"
+                                  "password you want to remove:  ")
             does_entry_exists = search_database("password_name", password_name)
             if not does_entry_exists:
                 raise LookupError
@@ -259,7 +271,8 @@ def delete_password():
             continue
         break
 
-    delete_query = f""" DELETE from passwords WHERE password_name='{password_name}'"""
+    delete_query = f""" DELETE from passwords
+    WHERE password_name='{password_name}'"""
     cursor.execute(delete_query)
     connection.commit()
     print(f"Successfully deleted the password {password_name}\n")
@@ -298,8 +311,10 @@ def menu():
             create_password(connect_db())
         elif menu_option == 2:
             while True:
-                password_length = int(input("How long do you want the password to be?\n"
-                                            "Password's should be more than 8 characters and "
+                password_length = int(input("How long do you want the"
+                                            "password to be?\n"
+                                            "Password's should be more"
+                                            "than 8 characters and "
                                             "a max of 25 characters long.\n"))
                 length_check = check_password(password_length)
                 if length_check is True:
