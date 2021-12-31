@@ -230,7 +230,7 @@ def find_password():
 
     column_search = int(input("Would you like to\n"
                               "1. Search by username\n"
-                              "2. By the password name?\n"))
+                              "2. Search by password name?\n"))
     search_term = input("What would you like to search for ")
 
     if column_search == 1:
