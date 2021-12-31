@@ -325,9 +325,11 @@ def menu():
 def main():
     """Main function"""
 
-    is_logged_in = login()
-    while is_logged_in:
-        menu()
+    while True:
+        if login():
+            menu()
+        else:
+            login()
 
 
 main()
