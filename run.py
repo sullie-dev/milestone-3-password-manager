@@ -288,12 +288,12 @@ def menu():
     while True:
 
         menu_option = input("1. Add a new password\n"
-                                "2. Generate a new password\n"
-                                "3. Search for a password\n"
-                                "4. Search for all passwords\n"
-                                "5. Delete a password\n"
-                                "6. Exit password manager\n\n"
-                                "Your choice: ")
+                            "2. Generate a new password\n"
+                            "3. Search for a password\n"
+                            "4. Show all passwords\n"
+                            "5. Delete a password\n"
+                            "6. Exit password manager\n\n"
+                            "Your choice: ")
         if menu_option == '1':
             create_password(connect_db())
         elif menu_option == '2':
